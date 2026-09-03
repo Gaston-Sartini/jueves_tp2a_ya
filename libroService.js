@@ -32,18 +32,7 @@ async function librosEnStock(){
     return libros.filter((libro)=>libro.stock > 0);
 }
 
-async function main(){
-    console.log(await listarLibros());
-    console.log(await buscarPorId(3));
-    console.log(await buscarLibrosPorAutor("Antoine de Saint-Exupery"));
-    console.log(await librosEnStock());
-    const libro = {
-        "titulo": "Volver al futuro",
-        "autor": "Peter Parket",
-        "stock": 4
-    };
-    console.log(await agregarLibro(libro));
-}
+
 
 /*
 3. Agregar una función nueva `async function agregarLibro(libro)` que:
@@ -66,5 +55,29 @@ async function agregarLibro(libro){
     await fs.writeFile(rutaArchivo, JSON.stringify(libros, null, 2));
     return libro;
 };
-main();
 
+
+
+module.exports = {
+    listarLibros,
+    buscarPorId,
+    buscarLibrosPorAutor,
+    librosEnStock,
+    agregarLibro
+};
+
+
+/*
+async function main(){
+    console.log(await listarLibros());
+    console.log(await buscarPorId(3));
+    console.log(await buscarLibrosPorAutor("Antoine de Saint-Exupery"));
+    console.log(await librosEnStock());
+    const libro = {
+        "titulo": "Volver al futuro",
+        "autor": "Peter Parket",
+        "stock": 4
+    };
+    console.log(await agregarLibro(libro));
+}
+*/

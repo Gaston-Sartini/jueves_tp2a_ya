@@ -56,3 +56,63 @@ server.listen(8000, () => {
 });
 
 console.log(2 === "2");
+
+/*
+
+4. Actualizar `index.js`: como ahora todas las funciones son `async`, hay que llamarlas con `await`
+ dentro de una función `async` (o encadenadas con `.then`). Probar `listarLibros()`,
+  `agregarLibro(...)` con un libro nuevo, y volver a `listarLibros()` para confirmar que quedó
+   guardado — **incluso si vuelven a correr el script**, el libro nuevo tiene que seguir estando
+    (a diferencia de la clase 1, donde vivía solo en memoria).
+
+*/
+const {
+    listarLibros,
+    buscarPorId,
+    buscarLibrosPorAutor,
+    librosEnStock,
+    agregarLibro
+} = require('./libroService.js');
+
+async function main() {
+  try {
+    // 1. Listar todos los libros iniciales
+    console.log('--- Lista de libros inicial ---');
+    const librosIniciales = await listarLibros();
+    console.log(librosIniciales);
+
+    // 2. Buscar un libro por ID
+    console.log('\n--- Buscar por ID (id: 2) ---');
+    const libroPorId = await buscarPorId(2);
+    console.log(libroPorId);
+
+    // 3. Buscar libros por autor
+    console.log('\n--- Buscar por autor ("Garcia Marquez") ---');
+    const librosPorAutor = await buscarLibrosPorAutor('Garcia Marquez');
+    console.log(librosPorAutor);
+
+    // 4. Filtrar libros en stock
+    console.log('\n--- Libros con stock disponible ---');
+    const enStock = await librosEnStock();
+    console.log(enStock);
+
+    // 5. Agregar un libro nuevo
+    console.log('\n--- Agregando nuevo libro ---');
+    const nuevo = await agregarLibro({
+      titulo: '1984',
+      autor: 'George Orwell',
+      stock: 5
+    });
+    console.log('Libro agregado con éxito:', nuevo);
+
+    // 6. Volver a listar para confirmar que persiste en el archivo
+    console.log('\n--- Lista de libros actualizada ---');
+    const librosActualizados = await listarLibros();
+    console.log(librosActualizados);
+
+  } catch (error) {
+    console.error('Ocurrió un error:', error.message);
+  }
+}
+
+main();

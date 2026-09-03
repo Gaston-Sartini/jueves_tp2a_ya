@@ -34,5 +34,11 @@
     "titulo": "Volver al futuro",
     "autor": "Peter Parket",
     "stock": 4
+  },
+  {
+    "id": 7,
+    "titulo": "1984",
+    "autor": "George Orwell",
+    "stock": 5
   }
 ]
