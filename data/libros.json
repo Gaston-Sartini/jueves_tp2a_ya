@@ -1,32 +1,38 @@
 [
-	{
-		"id": 1,
-		"titulo": "El principito",
-		"autor": "Antoine de Saint-Exupery",
-        "stock": 3
-	},
-	{
-		"id": 2,
-		"titulo": "Don Quijote de la Mancha",
-		"autor": "Miguel de Cervantes",
-        "stock":0
-	},
-	{
-		"id": 3,
-		"titulo": "Cien anos de soledad",
-		"autor": "Gabriel Garcia Marquez",
-        "stock":2
-	},
-	{
-		"id": 4,
-		"titulo": "La sombra del viento",
-		"autor": "Carlos Ruiz Zafon",
-        "stock":1
-	},
-	{
-		"id": 5,
-		"titulo": "Rayuela",
-		"autor": "Julio Cortazar",
-        "stock": 0
-	}
+  {
+    "id": 1,
+    "titulo": "El principito",
+    "autor": "Antoine de Saint-Exupery",
+    "stock": 3
+  },
+  {
+    "id": 2,
+    "titulo": "Don Quijote de la Mancha",
+    "autor": "Miguel de Cervantes",
+    "stock": 0
+  },
+  {
+    "id": 3,
+    "titulo": "Cien anos de soledad",
+    "autor": "Gabriel Garcia Marquez",
+    "stock": 2
+  },
+  {
+    "id": 4,
+    "titulo": "La sombra del viento",
+    "autor": "Carlos Ruiz Zafon",
+    "stock": 1
+  },
+  {
+    "id": 5,
+    "titulo": "Rayuela",
+    "autor": "Julio Cortazar",
+    "stock": 0
+  },
+  {
+    "id": 6,
+    "titulo": "Volver al futuro",
+    "autor": "Peter Parket",
+    "stock": 4
+  }
 ]
