@@ -1,0 +1,51 @@
+@baseUrl = http://localhost:8000
+
+### Listar todos los libros
+GET {{baseUrl}}/libros
+
+### Filtrar libros por autor
+GET {{baseUrl}}/libros?autor=Orwell
+
+### Obtener un libro existente
+GET {{baseUrl}}/libros/1
+
+### Obtener un libro inexistente
+GET {{baseUrl}}/libros/999
+
+### Crear un libro valido
+POST {{baseUrl}}/libros
+Content-Type: application/json
+
+{
+	"isbn": "978-1234567890",
+	"titulo": "El nombre de la rosa",
+	"autor": "Umberto Eco",
+	"stock": 4
+}
+
+### Intentar crear un libro sin titulo
+POST {{baseUrl}}/libros
+Content-Type: application/json
+
+{
+	"isbn": "978-1234567890",
+	"autor": "Autor de prueba",
+	"stock": 2
+}
+
+### Actualizar un libro
+PUT {{baseUrl}}/libros/1
+Content-Type: application/json
+
+{
+	"isbn": "978-0140283334",
+	"titulo": "El principito actualizado",
+	"autor": "Antoine de Saint-Exupery",
+	"stock": 10
+}
+
+### Eliminar un libro
+DELETE {{baseUrl}}/libros/2
+
+### Ver la lista final
+GET {{baseUrl}}/libros
