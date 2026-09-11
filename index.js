@@ -1,22 +1,17 @@
-import express from 'express';
+import express from "express";
+import { logger } from "./middlewares/logger.js";
+import { mensaje } from "./middlewares/mensaje.js";
+import router from "./routes/router.js";
 
 const app = express();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(logger);
 
-app.get("/",(req, res)=>{
-     res.send("server ok")
-})
-app.get("/libros",(req, res)=>{
-     res.send("todos los libros")
-})
-app.post("/libros",(req, res)=>{
-     console.log(`🚀 ~ req:`, req.body)
-     res.send(`crear un libro ${req.body.nombre}`)
-})
-
+app.use("/app", router);
 
 
 app.listen(8000, () => {
-  console.log('Server is running on port 8000');
+  console.log("Server is running on port 8000");
 });
