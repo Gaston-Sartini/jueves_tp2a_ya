@@ -1,5 +1,7 @@
-export function logger(req, res, next) {
-  console.log(`🚀 ~ req.method:`, req.method);
-  console.log(`🚀 ~ req.url:`, req.url);
+// Middleware de aplicación: loguea cada request y sigue la fila con next().
+function logger(req, res, next) {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
   next();
 }
+
+export default logger;

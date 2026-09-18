@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/osvaldoojeda-ort/jueves_tp2a_ya#readme",
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "zod": "^4.6.5"
   }
 }

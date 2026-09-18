@@ -1,49 +1,144 @@
+import books from "../data/books.js";
+import AppError from "../errors/AppError.js";
+import {bookCreateSchema} from "../schema/bookSchema.js";
 
-function getAllBooks(req, res) {
-     try{
-            res.status(200).send("Get all Books");
-     }catch(error){
-            res.status(500).send("Error occurred while fetching books");
-     }
+// Helper para no repetir la forma del error en cada lado.
+function error(res, status, code, message) {
+  return res.status(status).json({ error: { code, message } });
 }
 
-function getBookById(req, res) {
-     try{
-            const { id } = req.params;
-            res.status(200).send(`Get book by ID: ${id}`);
-     }catch(error){
-            res.status(500).send("Error occurred while fetching book by ID");
-     }
+// GET /books  — lista, con filtro (?autor=), orden (?sort=) y paginado (?page=&limit=)
+function listar(req, res) {
+  const { autor, sort } = req.query;
+  let resultado = [...books];
+
+  if (autor) {
+    const termino = autor.toLowerCase();
+    resultado = resultado.filter((l) =>
+      l.autor.toLowerCase().includes(termino),
+    );
+  }
+
+  if (sort) {
+    const desc = sort.startsWith("-");
+    const campo = desc ? sort.slice(1) : sort;
+    resultado.sort((a, b) => {
+      if (a[campo] < b[campo]) return desc ? 1 : -1;
+      if (a[campo] > b[campo]) return desc ? -1 : 1;
+      return 0;
+    });
+  }
+
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 20;
+  const desde = (page - 1) * limit;
+  resultado = resultado.slice(desde, desde + limit);
+
+  res.status(200).json(resultado);
 }
 
-function createBook(req, res) {
-     try{
-          const { title, author } = req.body;
-          if(!title || !author) throw new Error("Title and author are required");
-            res.status(201).send(`Create a new book ${title} by ${author}`);
-     }catch(error){
-            res.status(500).send(`Error occurred while creating a new book: ${error.message}`);
-     }
+// GET /books/:id
+// function obtener(req, res) {
+//   const id = Number(req.params.id);
+//   const libro = books.find((l) => l.id === id);
+//   if (!libro) {
+//     return error(res, 404, "BOOK_NOT_FOUND", `No book exists with id ${req.params.id}`);
+//   }
+//   res.status(200).json(libro);
+// }
+
+// function obtener(req, res, next) {
+//   const id = Number(req.params.id);
+//   const libro = books.find((l) => l.id === id);
+//   if (!libro) {
+//     return next(new Error(`No book exists with id ${req.params.id}`)); // Pass the error to the error handler
+//   }
+//   res.status(200).json(libro);
+// }
+
+// function obtener(req, res, next) {
+//   const id = Number(req.params.id);
+//   const libro = books.find((l) => l.id === id);
+//   if (!libro) {
+//     throw new Error(`No book exists with id throw ${req.params.id}`); // Pass the error to the error handler
+//   }
+//   res.status(200).json(libro);
+// }
+
+// async function obtener(req, res, next) {
+//      const libro= await books.find()
+// }
+
+function obtener(req, res, next) {
+  const id = Number(req.params.id);
+  const libro = books.find((l) => l.id === id);
+  if (!libro) {
+   return next(
+      new AppError(
+        404,
+        "BOOK_NOT_FOUND",
+        `No book exists with id AppError ${req.params.id}`,
+      ),
+    ); // Pass the error to the error handler
+  }
+  res.status(200).json(libro);
 }
 
-function updateBookById(req, res) {
-     try{
-          const { id } = req.params;
-          const { title, author } = req.body;
-          if(!title || !author) throw new Error("Title and author are required");
-            res.status(200).send(`Update book by ID: ${id} with title: ${title} and author: ${author}`);
-     }catch(error){
-            res.status(500).send(`Error occurred while updating book by ID: ${error.message}`);
-     }
+
+// POST /books
+function crear(req, res) {
+  const parseResult = bookCreateSchema.parse(req.body);
+  console.log(`🚀 ~ crear ~ parseResult:`, parseResult)
+  const { titulo, autor, isbn, stock } = req.body;
+  if (!titulo || !autor) {
+    return error(res, 400, "MISSING_DATA", "Title and author are required");
+  }
+
+  const ids = books.map((l) => l.id);
+  const nuevoLibro = {
+    id: ids.length > 0 ? Math.max(...ids) + 1 : 1,
+    isbn: isbn ?? "No ISBN",
+    titulo,
+    autor,
+    stock: stock ?? 0,
+  };
+
+  books.push(nuevoLibro);
+  res.status(201).json(nuevoLibro);
 }
 
-function deleteBookById(req, res) {
-     try{
-          const { id } = req.params;
-            res.status(200).send(`Delete book by ID: ${id}`);
-     }catch(error){
-            res.status(500).send("Error occurred while deleting book by ID");
-     }
+// PUT /books/:id
+function actualizar(req, res) {
+  const id = Number(req.params.id);
+  const index = books.findIndex((l) => l.id === id);
+  if (index === -1) {
+    return error(
+      res,
+      404,
+      "BOOK_NOT_FOUND",
+      `No book exists with id ${req.params.id}`,
+    );
+  }
+
+  books[index] = { ...books[index], ...req.body, id };
+  res.status(200).json(books[index]);
 }
 
-export { getAllBooks, getBookById, createBook, updateBookById, deleteBookById };
+// DELETE /books/:id
+function eliminar(req, res) {
+  const id = Number(req.params.id);
+  const index = books.findIndex((l) => l.id === id);
+  if (index === -1) {
+    return error(
+      res,
+      404,
+      "BOOK_NOT_FOUND",
+      `No book exists with id ${req.params.id}`,
+    );
+  }
+
+  books.splice(index, 1);
+  res.status(200).json({ message: "Book deleted successfully" });
+}
+
+export default { listar, obtener, crear, actualizar, eliminar };
