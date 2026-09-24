@@ -1,20 +1,24 @@
 import express from "express";
-import logger  from "./middlewares/logger.js";
-import router from "./routes/router.js";
+
+import logger from "./middlewares/logger.js";
 import notFound from "./middlewares/notFound.js";
 import errorHandler from "./middlewares/errorHandler.js";
+import router from "./routes/index.js";
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Middlewares globales — el orden es el orden de ejecución
 app.use(logger);
+app.use(express.json());
 
-app.use("/app", router);
+// Todas las rutas se gestionan desde routes/index.js
+app.use(router);
 
+// Cierre de la fila: primero el 404, después el manejador de errores
 app.use(notFound);
+app.use(errorHandler);
 
-app.use(errorHandler)
-app.listen(8000, () => {
-  console.log("Server is running on port 8000");
+app.listen(PORT, () => {
+  console.log(`Servidor Express corriendo en http://localhost:${PORT}`);
 });

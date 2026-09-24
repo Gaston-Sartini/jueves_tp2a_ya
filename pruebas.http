@@ -1,57 +1,76 @@
-### 1. GET /app/books -> listar todos
-GET http://localhost:8000/app/books
-
-### 2. GET /app/books?autor=Orwell -> filtro por autor (clase 4, sigue andando)
-GET http://localhost:8000/app/books?autor=Orwell
-
-### 3. GET /app/books?page=1&limit=2 -> paginado: solo 2 resultados
-GET http://localhost:8000/app/books?page=1&limit=2
-
-### 4. GET /app/books?sort=-stock -> orden descendente por stock
-GET http://localhost:8000/app/books?sort=-stock
-
-### 5. GET /app/books?sort=titulo -> orden ascendente por título
-GET http://localhost:8000/app/books?sort=titulo
-
-### 6. GET /app/books/1 -> existe (200)
-GET http://localhost:8000/app/books/1
-
-### 7. GET /app/books/999 -> no existe: formato de error estandarizado (404)
-GET http://localhost:8000/app/books/999
-
-### 8. POST /app/books -> crear válido (201)
-POST http://localhost:8000/app/books
+### 1. POST /books — sin título ni autor: 400 con details
+POST http://localhost:3000/books
 Content-Type: application/json
 
 {
-  "isbn": "9788437604947",
-  "titulo": "Ficciones",
-  "autor": "Jorge Luis Borges",
-  "stock": "4"
+  "author": ""
 }
 
-### 9. POST /app/books -> sin título: error estandarizado (400)
-POST http://localhost:8000/app/books
+### 2. POST /books — stock negativo: 400, details sobre stock
+POST http://localhost:3000/books
 Content-Type: application/json
 
 {
-  "autor": "Autor Anónimo"
+  "title": "X",
+  "author": "Y",
+  "stock": -3
 }
 
-### 10. PUT /app/books/1 -> actualizar (200)
-PUT http://localhost:8000/app/books/1
+### 3. POST /books — stock del tipo equivocado: 400
+POST http://localhost:3000/books
 Content-Type: application/json
 
 {
-  "titulo": "Cien años de soledad (Edición Especial)",
-  "stock": 10
+  "title": "X",
+  "author": "Y",
+  "stock": "cinco"
 }
 
-### 11. DELETE /app/books/2 -> eliminar (200)
-DELETE http://localhost:8000/app/books/2
+### 4. POST /books — válido sin stock: 201 y stock = 0 (default de Zod)
+POST http://localhost:3000/books
+Content-Type: application/json
 
-### 12. GET /cualquier-cosa -> notFound middleware: 404 estandarizado
-GET http://localhost:8000/cualquier-cosa
+{
+  "title": "Ficciones",
+  "author": "Jorge Luis Borges"
+}
 
-### 13. GET /app/books -> estado final
-GET http://localhost:8000/app/books
+### 5. POST /books — ISBN mal formado: 400
+POST http://localhost:3000/books
+Content-Type: application/json
+
+{
+  "title": "El Aleph",
+  "author": "Jorge Luis Borges",
+  "isbn": "123"
+}
+
+### 6. POST /books — ISBN duplicado: 409 (lógica de negocio, no validación)
+POST http://localhost:3000/books
+Content-Type: application/json
+
+{
+  "title": "Duplicado",
+  "author": "Test",
+  "isbn": "9780393312838"
+}
+
+### 7. GET /books/999 — 404 armado por el errorHandler
+GET http://localhost:3000/books/999
+
+### 8. PUT /books/1 — update parcial: solo stock (200)
+PUT http://localhost:3000/books/1
+Content-Type: application/json
+
+{
+  "stock": 5
+}
+
+### 9. GET /books — listar
+GET http://localhost:3000/books
+
+### 10. GET /books?page=1&limit=2 — paginado
+GET http://localhost:3000/books?page=1&limit=2
+
+### 11. GET /cualquier-cosa — notFound → errorHandler (404)
+GET http://localhost:3000/cualquier-cosa

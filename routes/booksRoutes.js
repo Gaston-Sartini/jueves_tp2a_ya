@@ -1,12 +1,14 @@
-import { Router } from "express";
+import express from "express";
 import booksController from "../controllers/booksController.js";
+import validate, { validateQuery } from "../middlewares/validate.js";
+import { createBookSchema, updateBookSchema, paginationSchema } from "../schemas/bookSchema.js";
 
-const booksRoutes = Router();
-booksRoutes.get("/", booksController.listar);
-booksRoutes.get("/:id", booksController.obtener);
-booksRoutes.post("/", booksController.crear);
-booksRoutes.put("/:id", booksController.actualizar);
-booksRoutes.delete("/:id", booksController.eliminar);
+const router = express.Router();
 
+router.get("/", validateQuery(paginationSchema), booksController.list);
+router.get("/:id", booksController.get);
+router.post("/", validate(createBookSchema), booksController.create);
+router.put("/:id", validate(updateBookSchema), booksController.update);
+router.delete("/:id", booksController.remove);
 
-export default booksRoutes;
+export default router;

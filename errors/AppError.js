@@ -1,8 +1,11 @@
+// Error esperado de la aplicación: lleva código HTTP (statusCode), código de negocio (code) y detalles opcionales.
 class AppError extends Error {
-  constructor(statusCode, errorCode, message) {
+  constructor(code, message, statusCode = 400, details = undefined) {
     super(message);
+    this.name = "AppError";
+    this.code = code;
     this.statusCode = statusCode;
-    this.errorCode = errorCode;
+    this.details = details;
   }
 }
 

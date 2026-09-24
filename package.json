@@ -1,27 +1,18 @@
 {
-  "name": "jueves_tp2a_ya",
+  "name": "biblioteca-api-express",
   "version": "1.0.0",
-  "description": "",
+  "description": "API REST de Biblioteca — validación con Zod + error handler central (Clase 6)",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "node .",
-    "dev": "node --watch .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "node --watch index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://@github.com/osvaldoojeda-ort/jueves_tp2a_ya.git"
-  },
-  "keywords": [],
+  "keywords": ["express", "rest-api", "node", "zod"],
   "author": "",
   "license": "ISC",
-  "type": "module",
-  "bugs": {
-    "url": "https://github.com/osvaldoojeda-ort/jueves_tp2a_ya/issues"
-  },
-  "homepage": "https://github.com/osvaldoojeda-ort/jueves_tp2a_ya#readme",
   "dependencies": {
     "express": "^5.2.1",
-    "zod": "^4.6.5"
+    "zod": "^4.5.4"
   }
 }

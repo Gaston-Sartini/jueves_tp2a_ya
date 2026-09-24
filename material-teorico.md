@@ -137,7 +137,7 @@ function errorHandler(err, req, res, next) {
   // Inesperado: bug. Log entero para los desarrolladores, respuesta vaga para el cliente.
   console.error("Error no controlado:", err);
   res.status(500).json({
-    error: { code: "ERROR_INTERNO", message: "Ocurrió un error inesperado" },
+    error: { code: "ERROR_INTERNO", message: "Ocurrió un error inesperado en el servidor" },
   });
 }
 
@@ -304,10 +304,10 @@ Este reemplazo lo hace el middleware `validate` (sección 4.1), así que ningún
 | `z.enum(["activo", "inactivo"])` | Solo uno de esos valores exactos, nada más                                                          |
 | `z.array(z.string())`            | Un array donde cada elemento es un string                                                            |
 | `z.object({ ... })`              | Un objeto con una forma fija (se puede anidar)                                                       |
-| `.optional()`                    | El campo puede no venir (queda`undefined`)                                                         |
-| `.default(valor)`                | Si no viene, se completa con`valor`                                                                |
-| `.nullable()`                    | El campo puede ser explícitamente`null`                                                           |
-| `z.coerce.number()`              | Convierte el valor a número*antes* de validarlo (ideal para query params, que llegan como string) |
+| `.optional()`                    | El campo puede no venir (queda `undefined`)                                                        |
+| `.default(valor)`                | Si no viene, se completa con `valor`                                                               |
+| `.nullable()`                    | El campo puede ser explícitamente `null`                                                          |
+| `z.coerce.number()`              | Convierte el valor a número *antes* de validarlo (ideal para query params, que llegan como string) |
 
 Un ejemplo armando un schema con varios de estos a la vez, y probándolo con `safeParse` para ver qué devuelve en cada caso:
 
@@ -320,7 +320,7 @@ const usuarioSchema = z.object({
 
 usuarioSchema.safeParse({ nombre: "Ana", edad: 30 });
 // { success: true, data: { nombre: "Ana", edad: 30, rol: "lector" } }
-//                                                     ^ default aplicado, rol no vino
+//                                                 ^ default aplicado, rol no vino
 
 usuarioSchema.safeParse({ nombre: "", edad: -5, rol: "root" });
 // { success: false, error: ZodError con 3 issues: nombre (vacío), edad (negativo), rol (no es "admin" ni "lector") }
@@ -427,7 +427,7 @@ Zod no tiene forma de saber que ese `titulo` va a terminar pegado dentro de una 
 
 > **¿Y bloquear caracteres especiales con una regex en el schema, como defensa?** No es un buen camino: 1) rompe datos legítimos (`O'Brien`, títulos con guiones o tildes), y 2) es una lista negra siempre incompleta — un ataque de SQL injection no necesita comillas ni `;` para funcionar. Un regex en Zod tiene sentido para reglas de **negocio** del dato (ej: `isbn` con exactamente 13 dígitos), no como filtro anti-inyección.
 
-Donde sí ayuda Zod, aunque sea de rebote: por default `z.object({...})` **descarta cualquier clave que no esté declarada en el schema**. Si a `crearLibroSchema` (que solo tiene `titulo`, `autor`, `isbn`, `stock`) le mandan `{ titulo: "X", autor: "Y", isAdmin: true }`, el `isAdmin` desaparece de `resultado.data` — nunca llega al controller. Eso sí es protección real contra "mass assignment" (que se cuele un campo que el cliente no debería poder tocar), pero es un beneficio distinto de la inyección SQL, y no la reemplaza.
+Donde sí ayuda Zod, aunque sea de rebote: por default `z.object({...})` **descarta cualquier clave que no esté declarada en el schema**. Si a `crearLibroSchema` (que solo tiene `titulo`, `autor`, `isbn`, `stock`) le mandan `{ titulo: "X", autor: "Y", esAdmin: true }`, el `esAdmin` desaparece de `resultado.data` — nunca llega al controller. Eso sí es protección real contra "mass assignment" (que se cuele un campo que el cliente no debería poder tocar), pero es un beneficio distinto de la inyección SQL, y no la reemplaza.
 
 ## 4. Middleware de validación reutilizable
 
@@ -505,10 +505,10 @@ Respuesta final al cliente:
 
 ## 6. `index.js`: dónde va cada pieza
 
-Con todo lo nuevo de esta clase, `biblioteca-api-express/` queda así:
+Con todo lo nuevo de esta clase, el proyecto en `clases/6_clase/` queda así:
 
 ```
-biblioteca-api-express/
+clases/6_clase/
 ├── index.js
 ├── data/libros.js
 ├── errors/
@@ -545,9 +545,3 @@ app.use("/libros", librosRoutes); // las rutas usan validate(...) adentro
 app.use(notFound);       // ninguna ruta matcheó (404)
 app.use(errorHandler);   // SIEMPRE el último: atrapa todo lo que llegó por next(err) o throw
 ```
-
-El orden no es negociable: `errorHandler` va después de **todo**, porque su trabajo es recibir lo que los demás le pasaron.
-
-## Cierre
-
-Ya tenés el manejo de errores de una API real: una clase `AppError` para los errores esperados, un `errorHandler` central que arma la respuesta en un solo lugar y distingue bug de error de negocio, y Zod + un middleware `validate` reutilizable para que a los controllers les lleguen datos ya limpios. De la clase 7 en adelante entra la arquitectura en capas: sacar la lógica de negocio de los controllers hacia *casos de uso*.
