@@ -7,3 +7,15 @@ GET http://localhost:3000/libros
 GET http://localhost:3000/cualquiercosa
 
 ###
+POST http://localhost:3000/eco
+Content-Type: application/json
+
+{
+  "titulo": "Libro de prueba",
+  "autor": "Yo"
+}
+###
+POST http://localhost:3000/eco
+Content-Type: application/json
+
+hola
