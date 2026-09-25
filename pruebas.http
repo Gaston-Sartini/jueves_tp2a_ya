@@ -1,5 +1,5 @@
 ### 1. POST /books — sin título ni autor: 400 con details
-POST http://localhost:3000/books
+POST http://localhost:8000/books
 Content-Type: application/json
 
 {
@@ -7,7 +7,7 @@ Content-Type: application/json
 }
 
 ### 2. POST /books — stock negativo: 400, details sobre stock
-POST http://localhost:3000/books
+POST http://localhost:8000/books
 Content-Type: application/json
 
 {
@@ -17,7 +17,7 @@ Content-Type: application/json
 }
 
 ### 3. POST /books — stock del tipo equivocado: 400
-POST http://localhost:3000/books
+POST http://localhost:8000/books
 Content-Type: application/json
 
 {
@@ -27,16 +27,16 @@ Content-Type: application/json
 }
 
 ### 4. POST /books — válido sin stock: 201 y stock = 0 (default de Zod)
-POST http://localhost:3000/books
+POST http://localhost:8000/books
 Content-Type: application/json
 
 {
   "title": "Ficciones",
-  "author": "Jorge Luis Borges"
+  "author": "Osvald ojeda"
 }
 
 ### 5. POST /books — ISBN mal formado: 400
-POST http://localhost:3000/books
+POST http://localhost:8000/books
 Content-Type: application/json
 
 {
@@ -46,7 +46,7 @@ Content-Type: application/json
 }
 
 ### 6. POST /books — ISBN duplicado: 409 (lógica de negocio, no validación)
-POST http://localhost:3000/books
+POST http://localhost:8000/books
 Content-Type: application/json
 
 {
@@ -56,10 +56,10 @@ Content-Type: application/json
 }
 
 ### 7. GET /books/999 — 404 armado por el errorHandler
-GET http://localhost:3000/books/999
+GET http://localhost:8000/books/999
 
 ### 8. PUT /books/1 — update parcial: solo stock (200)
-PUT http://localhost:3000/books/1
+PUT http://localhost:8000/books/1
 Content-Type: application/json
 
 {
@@ -67,10 +67,10 @@ Content-Type: application/json
 }
 
 ### 9. GET /books — listar
-GET http://localhost:3000/books
+GET http://localhost:8000/books
 
 ### 10. GET /books?page=1&limit=2 — paginado
-GET http://localhost:3000/books?page=1&limit=2
+GET http://localhost:8000/books?page=1&limit=2
 
 ### 11. GET /cualquier-cosa — notFound → errorHandler (404)
-GET http://localhost:3000/cualquier-cosa
+GET http://localhost:8000/cualquier-cosa

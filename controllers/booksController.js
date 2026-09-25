@@ -1,5 +1,6 @@
 import books from "../data/books.js";
 import AppError from "../errors/AppError.js";
+import createBook from "../useCases/books/createBook.js";
 
 const bookNotFound = (id) =>
   new AppError("BOOK_NOT_FOUND", `No book exists with id ${id}`, 404);
@@ -39,23 +40,8 @@ function get(req, res, next) {
 }
 
 // POST /books — req.body ya validado por validate(createBookSchema)
-function create(req, res, next) {
-  const { title, author, isbn, stock } = req.body;
-
-  if (isbn && books.some((b) => b.isbn === isbn)) {
-    return next(new AppError("ISBN_DUPLICATE", `A book with ISBN ${isbn} already exists`, 409));
-  }
-
-  const ids = books.map((b) => b.id);
-  const newBook = {
-    id: ids.length > 0 ? Math.max(...ids) + 1 : 1,
-    isbn: isbn ?? "No ISBN",
-    title,
-    author,
-    stock,
-  };
-
-  books.push(newBook);
+async function create(req, res, next) {
+  const newBook = await createBook(req.body);
   res.status(201).json(newBook);
 }
 
