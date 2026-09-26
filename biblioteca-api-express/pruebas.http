@@ -89,3 +89,12 @@ GET http://localhost:3000/libros?sort=-stock&limit=3
 
 ### 16. Ruta inexistente (debe dar 404 estandarizado)
 GET http://localhost:3000/cualquier-cosa
+
+### 17. Listar autores
+GET http://localhost:3000/autores
+
+### 18. Buscar autor existente (debe dar 200)
+GET http://localhost:3000/autores/1
+
+### 19. Buscar autor inexistente (debe dar 404)
+GET http://localhost:3000/autores/999
