@@ -55,5 +55,13 @@ DELETE http://localhost:3000/libros/2
 ### 6b. Borrar libro inexistente (debe dar 404)
 DELETE http://localhost:3000/libros/999
 
-### 7. Ver cómo quedó la lista
+### 7. PATCH para actualizar stock de libro 1
+PATCH http://localhost:3000/libros/1
+Content-Type: application/json
+
+{
+  "stock": 15
+}
+
+### 8. Ver cómo quedó la lista
 GET http://localhost:3000/libros

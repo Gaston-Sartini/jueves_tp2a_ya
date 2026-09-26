@@ -55,6 +55,17 @@ app.put("/libros/:id", (req, res) => {
   res.status(200).json(libroActualizado);
 });
 
+app.patch("/libros/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const indice = libros.findIndex((libro) => libro.id === id);
+  if(indice === -1){
+    return res.status(404).json({error: "Libro no encontrado."});
+  }
+  const libroActualizado = {...libros[indice], ...req.body, id};
+  libros[indice] = libroActualizado;
+  res.status(200).json(libroActualizado);
+});
+
 app.delete("/libros/:id", (req, res) => {
   const id = Number(req.params.id);
   const indice = libros.findIndex((libro) => libro.id === id);
