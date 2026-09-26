@@ -65,3 +65,24 @@ Content-Type: application/json
 
 ### 8. Ver cómo quedó la lista
 GET http://localhost:3000/libros
+
+### 9. Prueba GET con Sort titulo
+GET http://localhost:3000/libros?sort=titulo
+
+### 10. Prueba GET con Sort stock
+GET http://localhost:3000/libros?sort=stock
+
+### 11. Prueba GET con Sort -stock
+GET http://localhost:3000/libros?sort=-stock
+
+### 12. Prueba GET Página 1, de a 2
+GET http://localhost:3000/libros?page=1&limit=2
+
+### 13. Prueba GET Página 2, de a 2
+GET http://localhost:3000/libros?page=2&limit=2
+
+#### 14. Prueba GET Página 3, de a 2
+GET http://localhost:3000/libros?page=3&limit=2
+
+### 15. Prueba GET con Sort y Paginación
+GET http://localhost:3000/libros?sort=-stock&limit=3
