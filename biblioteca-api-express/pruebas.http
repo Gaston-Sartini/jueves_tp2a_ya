@@ -86,3 +86,6 @@ GET http://localhost:3000/libros?page=3&limit=2
 
 ### 15. Prueba GET con Sort y Paginación
 GET http://localhost:3000/libros?sort=-stock&limit=3
+
+### 16. Ruta inexistente (debe dar 404 estandarizado)
+GET http://localhost:3000/cualquier-cosa
