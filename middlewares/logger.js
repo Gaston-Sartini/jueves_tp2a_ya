@@ -1,4 +1,4 @@
-// Application middleware: logs each request and passes control to next().
+// Middleware de aplicación: registra la petición y pasa el control al siguiente handler
 function logger(req, res, next) {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
   next();

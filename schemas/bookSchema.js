@@ -1,36 +1,57 @@
 import { z } from "zod";
 
-// Definimos los campos base reutilizables
+// Definición de campos reutilizables
 const fields = {
-  title: z.string({ error: "Title is required" }).min(1, "Title cannot be empty"),
-  author: z.string({ error: "Author is required" }).min(1, "Author cannot be empty"),
-  isbn: z.string().regex(/^\d{13}$/, "ISBN must be exactly 13 digits"),
+  titulo: z.string({ error: "El título es obligatorio" }).min(1, "El título no puede estar vacío"),
+  autor: z.string({ error: "El autor es obligatorio" }).min(1, "El autor no puede estar vacío"),
+  isbn: z.string().regex(/^\d{13}$/, "El ISBN debe tener exactamente 13 dígitos"),
   stock: z
-    .number({ error: "Stock must be a number" })
-    .int("Stock must be an integer")
-    .nonnegative("Stock cannot be negative"),
+    .number({ error: "El stock debe ser un número" })
+    .int("El stock debe ser un número entero")
+    .nonnegative("El stock no puede ser negativo"),
 };
 
-// POST /books — title y author obligatorios, isbn opcional, stock con default 0
+// Esquema para POST /books
 const createBookSchema = z.object({
-  title: fields.title,
-  author: fields.author,
+  titulo: fields.titulo,
+  autor: fields.autor,
   isbn: fields.isbn.optional(),
   stock: fields.stock.default(0),
 });
 
-// PUT /books/:id — actualización: todos los campos opcionales, stock SIN default
+// Esquema para PUT /books/:id (actualización parcial)
 const updateBookSchema = z.object({
-  title: fields.title.optional(),
-  author: fields.author.optional(),
+  titulo: fields.titulo.optional(),
+  autor: fields.autor.optional(),
   isbn: fields.isbn.optional(),
   stock: fields.stock.optional(),
 });
 
-// Query params para listar (?page=&limit=) — llegan como strings (z.coerce)
+// Esquema de paginación básica
 const paginationSchema = z.object({
   page: z.coerce.number().int().positive().default(1),
   limit: z.coerce.number().int().positive().max(100).default(20),
 });
 
-export { createBookSchema, updateBookSchema, paginationSchema };
+// Esquema completo para req.query en GET /books (filtros, ordenamiento y paginación)
+const queryBooksSchema = z.object({
+  autor: z.string().optional(),
+  author: z.string().optional(),
+  isbn: z.string().optional(),
+  sort: z.string().optional(),
+  page: z.coerce.number().int("La página debe ser un entero").positive("La página debe ser mayor a 0").optional(),
+  limit: z.coerce.number().int("El límite debe ser un entero").positive("El límite debe ser mayor a 0").max(100, "El límite máximo es 100").optional(),
+});
+
+// Esquema para validar los parámetros de la URL (ej: /books/:id)
+const bookIdParamSchema = z.object({
+  id: z.coerce.number().int("El ID debe ser un número entero").positive("El ID debe ser un número positivo"),
+});
+
+export {
+  createBookSchema,
+  updateBookSchema,
+  paginationSchema,
+  queryBooksSchema,
+  bookIdParamSchema,
+};

@@ -1,66 +1,58 @@
-import books from "../data/books.js";
 import AppError from "../errors/AppError.js";
-import createBook from "../useCases/books/createBook.js";
+import dao from "../dao/booksMemoryDao.js";
+import getBooks from "../usecases/books/getBooks.js";
+import getBookById from "../usecases/books/getBookById.js";
+import createBook from "../usecases/books/createBook.js";
+import updateBook from "../usecases/books/updateBook.js";
+import deleteBook from "../usecases/books/deleteBook.js";
 
-const bookNotFound = (id) =>
-  new AppError("BOOK_NOT_FOUND", `No book exists with id ${id}`, 404);
+/**
+ * Controlador de Libros basado en Clases.
+ * Recibe la instancia del DAO a través de Inyección de Dependencias en el constructor.
+ * Utiliza propiedades de flecha para preservar la referencia a `this.#dao` al pasarse como middleware en Express.
+ */
+class BooksController {
+  // El prefijo '#' indica un campo privado de clase (ES2020).
+  // Solo se puede acceder a `#dao` desde dentro de esta clase (encapsulamiento).
+  #dao;
 
-// GET /books — filtro (?author=), orden (?sort=) y paginado (?page=&limit=)
-function list(req, res, next) {
-  const { author, sort } = req.query;
-  let result = [...books];
-
-  if (author) {
-    const term = author.toLowerCase();
-    result = result.filter((b) => b.author.toLowerCase().includes(term));
+  constructor(daoDependency = dao) {
+    this.#dao = daoDependency;
   }
 
-  if (sort) {
-    const desc = sort.startsWith("-");
-    const field = desc ? sort.slice(1) : sort;
-    result.sort((a, b) => {
-      if (a[field] < b[field]) return desc ? 1 : -1;
-      if (a[field] > b[field]) return desc ? -1 : 1;
-      return 0;
-    });
-  }
+  // GET /books (?autor=...&isbn=...&sort=...)
+  list = async (req, res) => {
+    const books = await getBooks(req.query, this.#dao);
+    res.json(books);
+  };
 
-  const { page, limit } = req.pagination;
-  const from = (page - 1) * limit;
-  result = result.slice(from, from + limit);
+  // GET /books/:id
+  get = async (req, res) => {
+    const book = await getBookById(Number(req.params.id), this.#dao);
+    if (!book) throw new AppError("BOOK_NOT_FOUND", "No existe un libro con ese id", 404);
+    res.json(book);
+  };
 
-  res.status(200).json(result);
+  // POST /books
+  create = async (req, res) => {
+    const book = await createBook(req.body, this.#dao);
+    res.status(201).json(book);
+  };
+
+  // PUT /books/:id
+  update = async (req, res) => {
+    const book = await updateBook(Number(req.params.id), req.body, this.#dao);
+    if (!book) throw new AppError("BOOK_NOT_FOUND", "No existe un libro con ese id", 404);
+    res.json(book);
+  };
+
+  // DELETE /books/:id
+  remove = async (req, res) => {
+    const deleted = await deleteBook(Number(req.params.id), this.#dao);
+    if (!deleted) throw new AppError("BOOK_NOT_FOUND", "No existe un libro con ese id", 404);
+    res.status(204).send();
+  };
 }
 
-// GET /books/:id
-function get(req, res, next) {
-  const book = books.find((b) => b.id === Number(req.params.id));
-  if (!book) return next(bookNotFound(req.params.id));
-  res.status(200).json(book);
-}
-
-// POST /books — req.body ya validado por validate(createBookSchema)
-async function create(req, res, next) {
-  const newBook = await createBook(req.body);
-  res.status(201).json(newBook);
-}
-
-// PUT /books/:id — req.body ya validado por validate(updateBookSchema)
-function update(req, res, next) {
-  const index = books.findIndex((b) => b.id === Number(req.params.id));
-  if (index === -1) return next(bookNotFound(req.params.id));
-
-  books[index] = { ...books[index], ...req.body, id: books[index].id };
-  res.status(200).json(books[index]);
-}
-
-// DELETE /books/:id
-function remove(req, res, next) {
-  const index = books.findIndex((b) => b.id === Number(req.params.id));
-  if (index === -1) return next(bookNotFound(req.params.id));
-
-  books.splice(index, 1);
-  res.status(200).json({ message: "Book deleted successfully" });
-}
-
-export default { list, get, create, update, remove };
+export { BooksController };
+export default new BooksController(dao);

@@ -3,7 +3,7 @@ import booksRoutes from "./booksRoutes.js";
 
 const router = Router();
 
-// Montamos todos los routers de recursos acá con su ruta base
+// Montamos los routers de recursos con su prefijo base
 router.use("/books", booksRoutes);
 
 export default router;

@@ -1,4 +1,4 @@
-// Error esperado de la aplicación: lleva código HTTP (statusCode), código de negocio (code) y detalles opcionales.
+// Error personalizado de la aplicación para excepciones de dominio e HTTP
 class AppError extends Error {
   constructor(code, message, statusCode = 400, details = undefined) {
     super(message);
