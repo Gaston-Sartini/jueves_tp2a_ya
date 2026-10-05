@@ -1,4 +1,4 @@
-const libros = require("../data/libros.js");
+import libros from "../data/libros.js";
 
 function error(code, message){
   return {error: {code, message}};
@@ -88,4 +88,4 @@ function eliminar (req, res) {
   res.status(200).json({mensaje: "Libro eliminado correctamente."});
 };
 
-module.exports = {listar, obtener, crear, actualizar, eliminar, actualizarParcial};
+export default {listar, obtener, crear, actualizar, eliminar, actualizarParcial};

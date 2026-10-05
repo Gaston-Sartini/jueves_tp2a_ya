@@ -7,4 +7,4 @@ const autores = [
   { id: 6, nombre: "Julio Cortázar", pais: "Argentina", nacimiento: 1914 },
 ];
 
-module.exports = autores;
+export default autores;

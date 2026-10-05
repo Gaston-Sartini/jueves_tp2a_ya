@@ -1,4 +1,4 @@
-const autores = require("../data/autores.js");
+import autores from "../data/autores.js";
 
 function error(code, message){
   return {error: {code, message}};
@@ -17,4 +17,4 @@ function obtener(req, res) {
   res.status(200).json(autorPorId);
 };
 
-module.exports = {listar, obtener};
+export default {listar, obtener};

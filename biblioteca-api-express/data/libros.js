@@ -6,4 +6,4 @@ const libros = [
   { id: 5, isbn: "9780393312838", titulo: "1984", autor: "George Orwell", stock: 1, fechaAlta: "2024-04-05" },
 ];
 
-module.exports = libros;
+export default libros;

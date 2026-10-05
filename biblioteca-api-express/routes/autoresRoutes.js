@@ -1,8 +1,9 @@
-const express = require("express");
+import express from "express";
+import controller from "../controllers/autoresController.js";
+
 const router = express.Router();
-const controller = require("../controllers/autoresController.js");
 
 router.get("/", controller.listar);
 router.get("/:id", controller.obtener);
 
-module.exports = router;
+export default router;

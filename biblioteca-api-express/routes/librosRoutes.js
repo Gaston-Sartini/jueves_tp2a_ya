@@ -1,6 +1,6 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const controller = require("../controllers/librosController.js");
+import controller from "../controllers/librosController.js";
 
 router.get("/", controller.listar);
 router.get("/:id", controller.obtener);
@@ -9,4 +9,4 @@ router.put("/:id", controller.actualizar);
 router.delete("/:id", controller.eliminar);
 router.patch("/:id", controller.actualizarParcial);
 
-module.exports = router;
+export default router;

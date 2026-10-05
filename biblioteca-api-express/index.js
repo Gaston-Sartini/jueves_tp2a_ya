@@ -1,9 +1,9 @@
-const express = require("express");
+import express from "express";
+import librosRoutes from "./routes/librosRoutes.js";
+import autoresRoutes from "./routes/autoresRoutes.js";
+import logger from "./middlewares/logger.js";
+import notFound from "./middlewares/notFound.js";
 const app = express();
-const librosRoutes = require("./routes/librosRoutes.js");
-const autoresRoutes = require("./routes/autoresRoutes.js");
-const logger = require("./middlewares/logger.js");
-const notFound = require("./middlewares/notFound.js");
 
 app.use(logger);
 app.use(express.json());
