@@ -6,7 +6,7 @@ import { createBookSchema, updateBookSchema, paginationSchema } from "../schemas
 const router = express.Router();
 
 router.get("/", validateQuery(paginationSchema), controller.list);
-router.get("/:id", controller.getById);
+router.get("/:id", controller.get);
 router.post("/", validate(createBookSchema), controller.create);
 router.put("/:id", validate(updateBookSchema), controller.update);
 router.delete("/:id", controller.remove);
