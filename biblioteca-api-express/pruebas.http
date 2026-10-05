@@ -1,0 +1,161 @@
+### 1. Listar todos los libros
+GET http://localhost:3000/books
+
+### 2. Filtrar por autor
+GET http://localhost:3000/books?author=Orwell
+
+### 3a. Buscar libro existente (debe dar 200)
+GET http://localhost:3000/books/1
+
+### 3b. Buscar libro inexistente (debe dar 404)
+GET http://localhost:3000/books/999
+
+### 4a. Crear libro válido (debe dar 201)
+POST http://localhost:3000/books
+Content-Type: application/json
+
+{
+  "isbn": "9788437604947",
+  "title": "Rayuela",
+  "author": "Julio Cortázar",
+  "stock": 4
+}
+
+### 4b. Crear libro sin stock (debe dar 201 y quedar con stock 0 por el default de Zod)
+POST http://localhost:3000/books
+Content-Type: application/json
+
+{
+  "title": "El Aleph",
+  "author": "Jorge Luis Borges"
+}
+
+### 4c. Crear libro sin título y con autor vacío (debe dar 400, details con title y author)
+POST http://localhost:3000/books
+Content-Type: application/json
+
+{
+  "author": ""
+}
+
+### 4d. Crear libro con stock negativo (debe dar 400, details sobre stock)
+POST http://localhost:3000/books
+Content-Type: application/json
+
+{
+  "title": "X",
+  "author": "Y",
+  "stock": -3
+}
+
+### 4e. Crear libro con stock de tipo incorrecto (debe dar 400)
+POST http://localhost:3000/books
+Content-Type: application/json
+
+{
+  "title": "X",
+  "author": "Y",
+  "stock": "cinco"
+}
+
+### 4f. Crear libro con ISBN inválido (debe dar 400)
+POST http://localhost:3000/books
+Content-Type: application/json
+
+{
+  "title": "X",
+  "author": "Y",
+  "isbn": "123"
+}
+
+### 4g. Crear libro con ISBN duplicado (debe dar 409)
+POST http://localhost:3000/books
+Content-Type: application/json
+
+{
+  "title": "Duplicado",
+  "author": "Test",
+  "isbn": "9780393312838"
+}
+
+### 5a. Actualizar solo el stock del libro 1 (debe dar 200 y mantener el título)
+PUT http://localhost:3000/books/1
+Content-Type: application/json
+
+{
+  "stock": 5
+}
+
+### 5c. Actualizar con título vacío (debe dar 400)
+PUT http://localhost:3000/books/1
+Content-Type: application/json
+
+{
+  "title": ""
+}
+
+### 5b. Actualizar libro inexistente (debe dar 404)
+PUT http://localhost:3000/books/999
+Content-Type: application/json
+
+{
+  "title": "No existe",
+  "author": "Nadie"
+}
+
+### 6a. Borrar libro 2
+DELETE http://localhost:3000/books/2
+
+### 6b. Borrar libro inexistente (debe dar 404)
+DELETE http://localhost:3000/books/999
+
+### 8. Ver cómo quedó la lista
+GET http://localhost:3000/books
+
+### 9. Prueba GET con Sort title
+GET http://localhost:3000/books?sort=title
+
+### 10. Prueba GET con Sort stock
+GET http://localhost:3000/books?sort=stock
+
+### 11. Prueba GET con Sort -stock
+GET http://localhost:3000/books?sort=-stock
+
+### 12. Prueba GET Página 1, de a 2
+GET http://localhost:3000/books?page=1&limit=2
+
+### 13. Prueba GET Página 2, de a 2
+GET http://localhost:3000/books?page=2&limit=2
+
+### 14. Prueba GET Página 3, de a 2
+GET http://localhost:3000/books?page=3&limit=2
+
+### 15. Prueba GET con Sort y Paginación
+GET http://localhost:3000/books?sort=-stock&limit=3
+
+### 15a. Sin page ni limit (debe dar 200 con los defaults page 1 y limit 20)
+GET http://localhost:3000/books
+
+### 15b. Página negativa (debe dar 400)
+GET http://localhost:3000/books?page=-5
+
+### 15c. Limit que no es número (debe dar 400)
+GET http://localhost:3000/books?limit=abc
+
+### 15d. Limit en cero (debe dar 400)
+GET http://localhost:3000/books?limit=0
+
+### 15e. Filtro y orden junto con la paginación validada (debe dar 200)
+GET http://localhost:3000/books?author=orwell&sort=title
+
+### 16. Ruta inexistente (debe dar 404 estandarizado)
+GET http://localhost:3000/cualquier-cosa
+
+### 17. Listar autores
+GET http://localhost:3000/authors
+
+### 18. Buscar autor existente (debe dar 200)
+GET http://localhost:3000/authors/1
+
+### 19. Buscar autor inexistente (debe dar 404)
+GET http://localhost:3000/authors/999
