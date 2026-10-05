@@ -21,4 +21,9 @@ const updateBookSchema = z.object({
     stock: fields.stock.optional()
 });
 
-export { createBookSchema, updateBookSchema };
+const paginationSchema = z.object({
+    page: z.coerce.number().int().positive().default(1),
+    limit: z.coerce.number().int().positive().default(20)
+});
+
+export { createBookSchema, updateBookSchema, paginationSchema };

@@ -133,6 +133,21 @@ GET http://localhost:3000/books?page=3&limit=2
 ### 15. Prueba GET con Sort y Paginación
 GET http://localhost:3000/books?sort=-stock&limit=3
 
+### 15a. Sin page ni limit (debe dar 200 con los defaults page 1 y limit 20)
+GET http://localhost:3000/books
+
+### 15b. Página negativa (debe dar 400)
+GET http://localhost:3000/books?page=-5
+
+### 15c. Limit que no es número (debe dar 400)
+GET http://localhost:3000/books?limit=abc
+
+### 15d. Limit en cero (debe dar 400)
+GET http://localhost:3000/books?limit=0
+
+### 15e. Filtro y orden junto con la paginación validada (debe dar 200)
+GET http://localhost:3000/books?author=orwell&sort=title
+
 ### 16. Ruta inexistente (debe dar 404 estandarizado)
 GET http://localhost:3000/cualquier-cosa
 

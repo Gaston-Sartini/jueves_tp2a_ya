@@ -25,8 +25,7 @@ function list(req, res) {
       return 0;
     })
   }
-  const page = Number(req.query.page) || 1;
-  const limit = Number(req.query.limit) || 20;
+  const { page, limit } = req.pagination;
   const start = (page -1) * limit;
   const total = result.length;
   result = result.slice(start, start + limit);
