@@ -1,5 +1,5 @@
 function notFound(req, res){
-    res.status(404).json({error: {code: "RUTA_NO_ENCONTRADA", message: `No existe la ruta ${req.method} ${req.url}`}});
+    res.status(404).json({error: {code: "ROUTE_NOT_FOUND", message: `Route ${req.method} ${req.url} not found`}});
 }
 
 export default notFound;
