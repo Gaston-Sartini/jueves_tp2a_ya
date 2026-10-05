@@ -3,7 +3,7 @@ import { z } from "zod";
 const fields = {
     title: z.string().min(1),
     author: z.string().min(1),
-    isbn: z.string(),
+    isbn: z.string().regex(/^\d{13}$/, "ISBN must be exactly 13 digits"),
     stock: z.number().int().nonnegative()
 };
 

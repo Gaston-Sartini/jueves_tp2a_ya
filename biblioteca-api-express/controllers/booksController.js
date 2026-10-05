@@ -43,7 +43,10 @@ function getById(req, res, next) {
   res.status(200).json(book);
 };
 
-function create(req, res) {
+function create(req, res, next) {
+  if(req.body.isbn && books.some((book) => book.isbn === req.body.isbn)){
+    return next(new AppError("ISBN_DUPLICATE", `A book with ISBN ${req.body.isbn} already exists`, 409));
+  }
   let id = 1;
   const bookIds = books.map((book) => book.id);
   if(bookIds.length > 0){
