@@ -1,13 +1,14 @@
 import express from "express";
 import controller from "../controllers/booksController.js";
+import validate from "../middlewares/validate.js";
+import { createBookSchema, updateBookSchema } from "../schemas/bookSchema.js";
 
 const router = express.Router();
 
 router.get("/", controller.list);
 router.get("/:id", controller.getById);
-router.post("/", controller.create);
-router.put("/:id", controller.update);
+router.post("/", validate(createBookSchema), controller.create);
+router.put("/:id", validate(updateBookSchema), controller.update);
 router.delete("/:id", controller.remove);
-router.patch("/:id", controller.patch);
 
 export default router;

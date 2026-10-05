@@ -60,17 +60,6 @@ function update(req, res, next) {
   if(index === -1){
     return next(bookNotFound(id));
   }
-  const updatedBook = {...req.body, id};
-  books[index] = updatedBook;
-  res.status(200).json(updatedBook);
-};
-
-function patch (req, res, next) {
-  const id = Number(req.params.id);
-  const index = books.findIndex((book) => book.id === id);
-  if(index === -1){
-    return next(bookNotFound(id));
-  }
   const updatedBook = {...books[index], ...req.body, id};
   books[index] = updatedBook;
   res.status(200).json(updatedBook);
@@ -86,4 +75,4 @@ function remove (req, res, next) {
   res.status(200).json({message: "Book deleted successfully"});
 };
 
-export default {list, getById, create, update, remove, patch};
+export default {list, getById, create, update, remove};

@@ -21,23 +21,57 @@ Content-Type: application/json
   "stock": 4
 }
 
-### 4b. Crear libro sin título (debe dar 400)
+### 4b. Crear libro sin stock (debe dar 201 y quedar con stock 0 por el default de Zod)
 POST http://localhost:3000/books
 Content-Type: application/json
 
 {
-  "author": "Anónimo"
+  "title": "El Aleph",
+  "author": "Jorge Luis Borges"
 }
 
-### 5a. Actualizar libro 1
+### 4c. Crear libro sin título y con autor vacío (debe dar 400, details con title y author)
+POST http://localhost:3000/books
+Content-Type: application/json
+
+{
+  "author": ""
+}
+
+### 4d. Crear libro con stock negativo (debe dar 400, details sobre stock)
+POST http://localhost:3000/books
+Content-Type: application/json
+
+{
+  "title": "X",
+  "author": "Y",
+  "stock": -3
+}
+
+### 4e. Crear libro con stock de tipo incorrecto (debe dar 400)
+POST http://localhost:3000/books
+Content-Type: application/json
+
+{
+  "title": "X",
+  "author": "Y",
+  "stock": "cinco"
+}
+
+### 5a. Actualizar solo el stock del libro 1 (debe dar 200 y mantener el título)
 PUT http://localhost:3000/books/1
 Content-Type: application/json
 
 {
-  "isbn": "9780307474728",
-  "title": "Cien años de soledad (edición especial)",
-  "author": "Gabriel García Márquez",
-  "stock": 10
+  "stock": 5
+}
+
+### 5c. Actualizar con título vacío (debe dar 400)
+PUT http://localhost:3000/books/1
+Content-Type: application/json
+
+{
+  "title": ""
 }
 
 ### 5b. Actualizar libro inexistente (debe dar 404)
@@ -54,14 +88,6 @@ DELETE http://localhost:3000/books/2
 
 ### 6b. Borrar libro inexistente (debe dar 404)
 DELETE http://localhost:3000/books/999
-
-### 7. PATCH para actualizar stock de libro 1
-PATCH http://localhost:3000/books/1
-Content-Type: application/json
-
-{
-  "stock": 15
-}
 
 ### 8. Ver cómo quedó la lista
 GET http://localhost:3000/books
