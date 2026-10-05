@@ -1,18 +1,15 @@
 import authors from "../data/authors.js";
-
-function error(code, message){
-  return {error: {code, message}};
-}
+import AppError from "../errors/AppError.js";
 
 function list(req, res) {
   res.status(200).json(authors);
 };
 
-function getById(req, res) {
+function getById(req, res, next) {
   const id = Number(req.params.id);
   const author = authors.find(author => author.id === id);
   if(!author){
-    return res.status(404).json(error("AUTHOR_NOT_FOUND", `No author exists with id ${id}`));
+    return next(new AppError("AUTHOR_NOT_FOUND", `No author exists with id ${id}`, 404));
   }
   res.status(200).json(author);
 };

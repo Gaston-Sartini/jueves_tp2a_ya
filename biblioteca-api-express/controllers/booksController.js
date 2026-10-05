@@ -1,7 +1,8 @@
 import books from "../data/books.js";
+import AppError from "../errors/AppError.js";
 
-function error(code, message){
-  return {error: {code, message}};
+function bookNotFound(id) {
+  return new AppError("BOOK_NOT_FOUND", `No book exists with id ${id}`, 404);
 }
 
 function list(req, res) {
@@ -33,19 +34,16 @@ function list(req, res) {
   res.status(200).json({page, limit, total, data: result});
 };
 
-function getById(req, res) {
+function getById(req, res, next) {
   const id = Number(req.params.id);
   const book = books.find(book => book.id === id);
   if(!book){
-    return res.status(404).json(error("BOOK_NOT_FOUND", `No book exists with id ${id}`));
+    return next(bookNotFound(id));
   }
   res.status(200).json(book);
 };
 
 function create(req, res) {
-  if(!req.body.title || !req.body.author){
-    return res.status(400).json(error("INCOMPLETE_DATA", "Title and author are required"));
-  }
   let id = 1;
   const bookIds = books.map((book) => book.id);
   if(bookIds.length > 0){
@@ -56,33 +54,33 @@ function create(req, res) {
   res.status(201).json(newBook);
 };
 
-function update(req, res) {
+function update(req, res, next) {
   const id = Number(req.params.id);
   const index = books.findIndex((book) => book.id === id);
   if(index === -1){
-    return res.status(404).json(error("BOOK_NOT_FOUND", `No book exists with id ${id}`));
+    return next(bookNotFound(id));
   }
   const updatedBook = {...req.body, id};
   books[index] = updatedBook;
   res.status(200).json(updatedBook);
 };
 
-function patch (req, res) {
+function patch (req, res, next) {
   const id = Number(req.params.id);
   const index = books.findIndex((book) => book.id === id);
   if(index === -1){
-    return res.status(404).json(error("BOOK_NOT_FOUND", `No book exists with id ${id}`));
+    return next(bookNotFound(id));
   }
   const updatedBook = {...books[index], ...req.body, id};
   books[index] = updatedBook;
   res.status(200).json(updatedBook);
 };
 
-function remove (req, res) {
+function remove (req, res, next) {
   const id = Number(req.params.id);
   const index = books.findIndex((book) => book.id === id);
   if(index === -1){
-    return res.status(404).json(error("BOOK_NOT_FOUND", `No book exists with id ${id}`));
+    return next(bookNotFound(id));
   }
   books.splice(index, 1);
   res.status(200).json({message: "Book deleted successfully"});
