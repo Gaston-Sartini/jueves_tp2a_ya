@@ -19,7 +19,9 @@ async function getByIsbn(isbn) {
     return books.find((book) => book.isbn === isbn) ?? null;
 }
 
-async function save(data) {
+async function save(book) {
+    // Si viene algun id, se ignora para asignarle el id que sí corresponde
+    const { id: _ignored, ...data } = book;
     const newBook = { id: nextId, ...data };
     books.push(newBook);
     nextId++;

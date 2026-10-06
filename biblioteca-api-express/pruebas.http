@@ -103,6 +103,12 @@ Content-Type: application/json
   "author": "Nadie"
 }
 
+### 5c. Actualizar libro con stock negativo (debe dar 400)
+PUT http://localhost:3000/books/1
+Content-Type: application/json
+
+{ "stock": -5 }
+
 ### 6a. Borrar libro 2
 DELETE http://localhost:3000/books/2
 
