@@ -47,4 +47,6 @@ async function remove(id) {
     return true;
 }
 
-export default { getAll, getById, getByIsbn, save, update, delete: remove };
+async function init() {}
+
+export default { getAll, getById, getByIsbn, save, update, delete: remove, init };
