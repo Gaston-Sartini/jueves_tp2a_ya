@@ -165,3 +165,63 @@ GET http://localhost:3000/authors/1
 
 ### 19. Buscar autor inexistente (debe dar 404)
 GET http://localhost:3000/authors/999
+
+
+### 20. Listar usuarios
+GET http://localhost:3000/users
+
+### 21. Buscar usuario existente (en memoria hay 3; en la base, solo los que hayas creado)
+GET http://localhost:3000/users/1
+
+### 22. Buscar usuario inexistente (debe dar 404)
+GET http://localhost:3000/users/999
+
+### 23. Id inválido (debe dar 400)
+GET http://localhost:3000/users/abc
+
+### 24. Crear usuario válido sin rol (debe dar 201 con role reader)
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "name": "Ana",
+  "email": "ana@test.com"
+}
+
+### 25. Crear usuario con el mismo email (debe dar 409)
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "name": "Otra Ana",
+  "email": "ana@test.com"
+}
+
+### 26. Crear usuario con datos inválidos (debe dar 400)
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "name": "A",
+  "email": "no-es-un-email",
+  "role": "jefe"
+}
+
+### 27. Actualizar solo el nombre (debe dar 200 y mantener email y rol)
+PUT http://localhost:3000/users/1
+Content-Type: application/json
+
+{
+  "name": "Nuevo nombre"
+}
+
+### 28. Actualizar usuario inexistente (debe dar 404)
+PUT http://localhost:3000/users/999
+Content-Type: application/json
+
+{
+  "name": "Nadie"
+}
+
+### 29. Borrar usuario (debe dar 204, y 404 si lo repetís)
+DELETE http://localhost:3000/users/1
