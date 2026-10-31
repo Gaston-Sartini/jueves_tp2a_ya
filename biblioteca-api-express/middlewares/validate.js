@@ -34,5 +34,22 @@ function validateQuery(schema) {
     }
 };
 
+function validateParams(schema) {
+    return (req, res, next) => {
+        const result = schema.safeParse(req.params);
+
+        if(!result.success) {
+            const details = result.error.issues.map((issue) => {
+                const field = issue.path.join(".");
+                const message = issue.message;
+                return { field, message };
+            });
+            return next(new AppError("VALIDATION_ERROR", "Invalid route parameters", 400, details));
+        }
+        req.params = result.data;
+        next()
+    }
+}
+
 export default validate;
-export { validateQuery };
+export { validateQuery, validateParams };
